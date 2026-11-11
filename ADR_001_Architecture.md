@@ -13,19 +13,30 @@ Assumed scenario. A field sales rep needs to capture a customer visit while offl
 | Mobile | React Native, Expo, TypeScript, expo-audio, persistent app files and SQLite | Share one iOS and Android codebase, chosen over separate native apps because a small team can ship both platforms together; the cost is less direct control of native audio. Save audio and upload state locally so a rep can record offline and retry when connectivity returns. Test permissions and recording interruptions on both platforms. |
 | Backend | Go/Gin modular monolith, HTTP API and worker | Go gives small container images and simple concurrency for the worker. Keep note, review and export logic in one codebase, chosen over microservices, which would add deployment and coordination cost before the service boundaries are known. Run the API and worker as separate processes so request traffic and audio processing can scale independently. |
 | Infrastructure | AWS ECS Fargate, RDS for PostgreSQL, S3 | Run the API and worker on Fargate, chosen over EKS (cluster operations for two services) and Lambda (a poorer fit for leased background jobs). Store note, review and export state in PostgreSQL and audio in S3. Store extraction and export jobs in PostgreSQL so processing can continue after the app closes. |
-| AI | Managed speech-to-text and an LLM with schema-constrained output | Keep a transcript to distinguish recognition errors from extraction errors. Two calls add latency and cost. Validate the output in Go, measure extraction quality on representative notes and let the rep review it before export. |
+| Identity | Managed OpenID Connect identity provider, such as Amazon Cognito or Auth0 | Reps, tenant admins and support staff sign in with the provider, which issues short-lived tokens carrying the tenant and role. The API validates every token and applies the tenant to each query. Chosen over building authentication in the API because credential storage, password reset and MFA stay out of the codebase; the cost is a vendor dependency and per-user pricing. |
+| AI | Managed speech-to-text and an LLM with schema-constrained output | Keep a transcript to distinguish recognition errors from extraction errors. Two calls add latency and cost. Candidates are OpenAI, Deepgram or AssemblyAI for speech-to-text and OpenAI, Anthropic or Google for the LLM. Choose by measured extraction quality, latency and cost on the evals in Next steps, and keep each provider behind an interface so it can be swapped. Validate the output in Go, measure extraction quality on representative notes and let the rep review it before export. |
 | Integrations | Server-side CRM adapters over HTTPS | Translate the approved note into each CRM's API format and track export status separately. Retry failed writes without rerunning audio processing. |
 
 ## Product data flow
 
 [![Proposed production architecture: component and data-flow diagram](docs/architecture-production.png)](docs/architecture-production.png)
 
-*Proposed production architecture (click for full size). Blue: capture and upload, steps 1 and 2. Green: process and review, step 3. Orange: approve and export, step 4. Gray: admin and support access, described under Production operations. The numbers on the arrows match the steps below. "1 txn" means one database transaction. The API's check of the uploaded S3 object in step 2 is not drawn.*
+*Proposed production architecture (click for full size). Blue: capture and upload, steps 1 and 2. Green: process and review, step 3. Orange: approve and export, step 4. Gray: admin and support access, described under Production operations. The numbers on the arrows match the steps below. "1 txn" means one database transaction. The API's check of the uploaded S3 object in step 2 and the identity provider are not drawn.*
 
 1. **Capture offline.** The app saves the audio to a persistent app directory and a pending note with a client-generated ID to SQLite. When the app next runs with connectivity, it creates or retrieves that note over authenticated HTTPS and gets a short-lived, note-specific S3 upload URL. The same ID lets the app retry safely or request a fresh URL.
 2. **Upload and queue.** The app uploads directly to S3 and confirms completion over HTTPS. The API verifies the object, sets the note to queued and inserts an extraction job in one PostgreSQL transaction. A uniqueness constraint prevents duplicate jobs on repeated confirmation. After this commit, processing can continue with the app closed. Before it, the app shows **Saved on this device** or **Uploading**. After it, the app shows **Processing**.
 3. **Process and review.** The worker claims the job with a time-limited lease in a short transaction, then reads the audio from S3, calls speech-to-text and passes the transcript to the extraction LLM. It validates the result in Go and saves the transcript and draft in PostgreSQL. The app polls the API and lets the rep review and edit the draft.
 4. **Approve and export.** Approval saves the exact reviewed version and inserts a separate export job in one transaction. The worker sends that version to the tenant's CRM and records export status. Failed exports can be retried independently of AI processing.
+
+**Proposed production API.** JSON over authenticated HTTPS, with every call scoped to the caller's tenant:
+
+- `PUT /notes/{id}` creates the note from the client-generated ID, or returns it if it already exists, so a retry is safe (step 1).
+- `POST /notes/{id}/upload-url` returns a short-lived presigned S3 URL, or a fresh one (step 1).
+- `POST /notes/{id}/confirm-upload` makes the API verify the object and queue extraction (step 2).
+- `GET /notes/{id}` returns the status (awaiting upload, queued, processing, ready, exported or failed) and, once ready, the draft (step 3). The app polls it.
+- `POST /notes/{id}/approve` saves the reviewed version and queues the export (step 4).
+
+Admin and support actions use separate endpoints with role checks. The demo's single `POST /notes` collapses steps 1 to 3 into one synchronous call.
 
 ## Queue choice
 
