@@ -1,0 +1,17 @@
+# Secrets
+.env
+.env.local
+
+# Go
+backend/backend
+backend/*.test
+
+# Expo / Node
+node_modules/
+.expo/
+dist/
+web-build/
+*.log
+
+# macOS
+.DS_Store
