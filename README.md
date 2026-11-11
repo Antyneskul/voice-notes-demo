@@ -139,3 +139,7 @@ In the iOS Simulator, `npx expo start --ios` works the same way.
 ## Next steps
 
 See the [roadmap](NEXT_STEPS.md) for extraction evals, demo hardening and the production rollout.
+
+## AI assistance
+
+I used AI coding tools to help implement, review, and document this demo. I reviewed the architecture and implementation choices. Verification included local tests and a live Notion export of the bundled sample.
