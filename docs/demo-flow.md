@@ -1,25 +1,23 @@
-# Demo walkthrough: voice note to Notion
+# Demo flow: voice note to Notion
 
-Presenter notes for the demo and the discussion that follows. Audience: **AI lead and CTO**. The AI lead cares about the model step, validation, evals and failure modes. The CTO cares about the architecture, the path to production, risk and what has to be decided. Companion docs: [FILE_STRUCTURE.md](../FILE_STRUCTURE.md) (what each file does), [ADR_001_Architecture.md](../ADR_001_Architecture.md) (production design), [NEXT_STEPS.md](../NEXT_STEPS.md) (roadmap).
+Helper doc for the demo and the discussion that follows: the flow, how the LLM step works, what the demo does and does not show, and the open questions on next steps. Companion docs: [FILE_STRUCTURE.md](../FILE_STRUCTURE.md) (what each file does), [ADR_001_Architecture.md](../ADR_001_Architecture.md) (production design), [NEXT_STEPS.md](../NEXT_STEPS.md) (roadmap).
 
-Assumed shape (change as needed): about 10 to 15 minutes of walkthrough, then discussion of next steps.
-
-## 1. The pitch in 30 seconds
+## 1. Overview
 
 A field sales rep records a voice note after a customer visit. The app sends it to a small Go service. The service has OpenAI's audio model listen to it and return a summary, action items and tags. Go validates that output, then creates a page in Notion. About two to four seconds end to end in the runs so far.
 
 **What this demo is:** proof that the whole path works with real providers, with validation and failure handling in place.
-**What it is not:** a measurement of quality, cost or scale. There is no authentication, no retry, no offline mode, no rep review step. Say this early; it builds trust and frames the discussion.
+**What it is not:** a measurement of quality, cost or scale. There is no authentication, no retry, no offline mode, no rep review step.
 
-## 2. Live demo script
+## 2. Demo steps
 
-| Step | Do | Say |
+| Step | Do | Result |
 | --- | --- | --- |
-| 1 | Open the app on the iPhone. Point at the backend URL field. | It finds the laptop by itself on the same Wi-Fi. |
-| 2 | Record about 15 seconds: a customer, a product, one commitment with a deadline. Stop. | The app checks the file header and shows what was actually recorded (`Recorded WAV · 111 KB`). |
-| 3 | Upload. | One request. The server holds it open until Notion confirms. |
-| 4 | Show the result card, then **Open in Notion**. | Summary, action items as checkboxes, tags. |
-| 5 | Optional failure demo: upload a silent recording. | The prompt tells the model to say so and return empty lists. Nothing invented. |
+| 1 | Open the app on the iPhone. | The backend URL field is filled in from the laptop's address on the same Wi-Fi. |
+| 2 | Record about 15 seconds: a customer, a product, one commitment with a deadline. Stop. | The app checks the file header and shows what was recorded (`Recorded WAV · 111 KB`). |
+| 3 | Upload. | One request; the server holds it open until Notion confirms. |
+| 4 | Show the result card, then tap **Open in Notion**. | Summary, action items as checkboxes, tags. |
+| 5 | Optional: upload a silent recording. | The prompt tells the model to say so; action items and tags come back empty. Nothing is invented. |
 
 **Fallback if the phone or Wi-Fi fails:** run the sample from a terminal and show the Notion page.
 
@@ -52,7 +50,7 @@ curl -i -F "audio=@samples/sample-note.wav" http://localhost:8080/notes
 
 Upstream failures in steps 4 or 5 return 502 (`openai_failed`, `notion_failed`) or 504 (`openai_timeout`, `notion_timeout`).
 
-The point to land: **nothing is written to Notion unless the model's output passed validation, and the 201 is returned only after Notion confirms.**
+Key property: **nothing is written to Notion unless the model's output passed validation, and the 201 is returned only after Notion confirms.**
 
 ## 4. How the LLM step works (`backend/openai.go`, `backend/note.go`)
 
@@ -93,18 +91,16 @@ Note { summary, action_items[], tags[] }
 | Tags | each non-empty and at most 40 characters; lowercased and de-duplicated; more than 5 are trimmed, not failed |
 | Lengths | counted in UTF-16 units, the way Notion counts, so Cyrillic, CJK and emoji notes are not rejected for being "long" |
 
-**Choices worth explaining**
+**Design choices**
 - **One audio-native call, no transcript.** Simplest thing that works, one provider, one call. The cost is that nothing tells us whether an error came from hearing or from extracting. The ADR's production design uses speech-to-text followed by an LLM and keeps the transcript for exactly that reason.
 - **No `response_format`.** The model page lists only streaming and function calling as supported, so JSON is requested in the prompt and checked strictly in Go.
 - **`store: false`** so the completion is not kept in OpenAI's dashboard. Retention terms for real customer audio still need to be reviewed.
 - **Provider behind an interface.** `Extractor` and `Exporter` in `server.go`, so another model or another CRM is a new implementation plus one line in `buildServer`.
 - **Nothing sensitive in logs.** Only method, path, status, duration, and an allow-listed upstream error code.
 
-**What validation does and does not catch.** It guarantees the shape. It does not check the content. A summary that is well-formed but wrong, or an action item the speaker never stated, passes. That is the main open question for the AI lead, and it is what the evals are for.
+**What validation does and does not catch.** It guarantees the shape. It does not check the content. A summary that is well-formed but wrong, or an action item the speaker never stated, passes. That is the main open question, and it is what the evals are for.
 
 ## 5. What the demo does not prove
-
-Be direct about these; the audience will find them anyway.
 
 - **Quality is untested.** Manual smoke checks only: three synthetic recordings (including the bundled sample) and one silent simulator recording. No real speech, accents, noise, other languages or long notes.
 - **Latency and cost are not baselines.** "Two to four seconds" is from four runs of varying length. Cost per note has not been measured.
@@ -132,7 +128,7 @@ Detail is in [NEXT_STEPS.md](../NEXT_STEPS.md). The order is deliberate: measure
 5. **CTO:** which tenant and CRM defines the pilot, and who is the owner on the product side?
 6. **Both:** what are the pilot acceptance criteria for quality, latency and cost per note? (A first draft is in NEXT_STEPS.md under "Pilot acceptance criteria".)
 
-## 7. Likely questions, with honest answers
+## 7. Likely questions and answers
 
 | Question | Answer |
 | --- | --- |
@@ -147,11 +143,11 @@ Detail is in [NEXT_STEPS.md](../NEXT_STEPS.md). The order is deliberate: measure
 | What if OpenAI is down or slow? | 60 s timeout, then 504. No fallback provider yet; the interface makes adding one straightforward. |
 | Can it scale? | Not as built: synchronous, one process, audio held in memory per request. The ADR design (queue, worker, S3) is the answer. Scale numbers are not specified. |
 
-## 8. Before the presentation
+## 8. Before the demo
 
 - [ ] `cd backend && go test ./...` passes.
 - [ ] `backend/.env` has valid OpenAI and Notion credentials and a parent page the token can write to. Create one note with curl first to confirm.
 - [ ] Phone and laptop on the same Wi-Fi; Expo Go signed in (see the README note if it asks you to sign in).
 - [ ] Record a backup note and keep the Notion page it produced open in a tab.
-- [ ] Decide what to do about the upload spinner text in `mobile/App.tsx`: it says "Transcribing and saving to Notion…", but the demo never transcribes. Change it, or be ready to explain it, since this audience will notice.
+- [ ] Restart `npx expo start` after any app change so the phone picks it up.
 - [ ] Rotate or remove any key used for the demo if the screen is shared.
