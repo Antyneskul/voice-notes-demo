@@ -23,7 +23,7 @@ It implements the **Demo** section of the ADR. It is deliberately synchronous, u
 | `backend/` | Go service (run this first) |
 | `mobile/` | Expo / React Native demo screen (optional, iOS only) |
 | `samples/` | `sample-note.wav` (18 s, synthetic macOS `say` voice) and `sample-note.txt` (its script) for the curl example |
-| `docs/` | `demo-flow.md` (presenter notes for the AI lead / CTO demo: flow, LLM step, caveats, future-steps questions), `architecture-production.svg` / `.png` (ADR diagram), `notion-export-example.png` (README screenshot) |
+| `docs/` | `demo-flow.md` (helper doc for the demo: steps, flow, LLM step, caveats, future-steps questions), `architecture-production.svg` / `.png` (ADR diagram), `notion-export-example.png` (README screenshot) |
 | `.gitignore` | Ignores `.env`, `node_modules`, `.expo`, Go build output, `.DS_Store` |
 
 ## Backend (`backend/`, Go 1.25+, package `main`)
@@ -138,7 +138,7 @@ Android is not supported by the demo: `expo-audio` cannot record WAV or MP3 ther
 ## Known gaps and inconsistencies (as of 2026-11-15)
 
 - The demo has **no authentication**, no retries and no idempotency key. A failed Notion write after a successful extraction loses the note until the user uploads again.
-- The upload spinner in `mobile/App.tsx` says "Transcribing and saving to Notion…", but the demo never transcribes: it makes one audio-native call and keeps no transcript. Only the ADR's production design transcribes.
+- The demo never transcribes: it makes one audio-native call and keeps no transcript. Only the ADR's production design transcribes. (The upload spinner in `mobile/App.tsx` used to say "Transcribing…" and now says "Analysing audio…".)
 - Quality is untested beyond manual smoke runs (three synthetic recordings and one silent simulator recording). The "2 to 4 seconds per request" figure in `NEXT_STEPS.md` comes from four runs and is not a baseline.
 
 ## Commands

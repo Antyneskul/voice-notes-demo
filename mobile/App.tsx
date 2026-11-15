@@ -200,7 +200,7 @@ function Screen() {
         {uploading && (
           <View style={styles.progress}>
             <ActivityIndicator />
-            <Text style={styles.status}>Transcribing and saving to Notion…</Text>
+            <Text style={styles.status}>Analysing audio and saving to Notion…</Text>
           </View>
         )}
 
