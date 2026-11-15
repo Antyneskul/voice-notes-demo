@@ -23,7 +23,7 @@ It implements the **Demo** section of the ADR. It is deliberately synchronous, u
 | `backend/` | Go service (run this first) |
 | `mobile/` | Expo / React Native demo screen (optional, iOS only) |
 | `samples/` | `sample-note.wav` (18 s, synthetic macOS `say` voice) and `sample-note.txt` (its script) for the curl example |
-| `docs/` | `architecture-production.svg` / `.png` (ADR diagram), `notion-export-example.png` (README screenshot) |
+| `docs/` | `demo-flow.md` (presenter notes for the AI lead / CTO demo: flow, LLM step, caveats, future-steps questions), `architecture-production.svg` / `.png` (ADR diagram), `notion-export-example.png` (README screenshot) |
 | `.gitignore` | Ignores `.env`, `node_modules`, `.expo`, Go build output, `.DS_Store` |
 
 ## Backend (`backend/`, Go 1.25+, package `main`)
@@ -42,6 +42,33 @@ Every source file except `main.go` has a `_test.go` next to it. Tests run the re
 | `upstream.go` | `postJSON` (shared HTTP helper for both providers), `UpstreamError` (keeps only service, status and a short code, never the body), and the `knownCodes` allow-list that controls what may be logged. |
 
 ### Request path (`createNote` in `server.go`)
+
+```
+ Expo app (mobile/)             Go service (backend/)                        OpenAI           Notion
+ ------------------             ---------------------                        ------           ------
+ App.tsx: Record
+   (16 kHz mono WAV)
+ App.tsx: inspectRecording
+   (WAV or MP3 only)
+ uploadNote.ts
+   POST /notes (multipart) ---> server.go createNote
+                                 1. size limit ............ 413 too_large
+                                 2. one file in `audio` ... 400 missing_audio / invalid_upload
+                                 3. audio.go detectAudioFormat
+                                                        ...... 415 unsupported_audio
+                                 4. openai.go Extract ---------------------> gpt-audio-1.5
+                                                                              (audio + prompt)
+                                                            <--------------- JSON as text
+                                    note.go ParseNote ..... 502 model_output_invalid
+                                                            (stop: nothing written to Notion)
+                                 5. notion.go CreatePage -------------------------------> create page
+                                                            <------------------------------ page url
+   <--- 201 -----------------  {summary, action_items, tags, notion_page_url}
+ noteResult.ts validates reply
+ App.tsx: result card + "Open in Notion"
+
+ Any upstream failure in steps 4 or 5: 502 openai_failed / notion_failed, 504 openai_timeout / notion_timeout.
+```
 
 1. Reject over-size requests early (limit 10 MiB audio, 11 MiB request) -> 413.
 2. Parse multipart; require exactly one file in the `audio` field -> 400.
