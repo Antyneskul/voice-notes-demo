@@ -23,6 +23,15 @@ To change a diagram, open the `.drawio` file in [diagrams.net](https://app.diagr
 - **Arrows** point in the direction of the call or data sent. Dark arrows are requests, green arrows are return flows from the called system. The sales rep and admin links, which are two-way conversations, use one double-headed arrow.
 - **Current versus proposed.** The demo diagram holds only what the repo implements. Everything on the production diagram is a proposal, and it is badged as such. The demo's one multimodal audio call becomes separate transcription and extraction stages in production; that is a deliberate design change to evaluate, not a settled one.
 
+## Jobs and transactions in production
+
+The API writes to PostgreSQL in two separate transactions, and each creates a different job (ADR 001, steps 2 and 4):
+
+1. **Upload confirmed.** The API verifies the audio object, sets the note to queued and creates the **extraction job**.
+2. **Rep approves.** The API saves the exact version the rep approved and creates the **export job**.
+
+The worker claims either kind of job with a lease. No export job exists until the rep approves, so the worker can only export an approved version, never a draft.
+
 ## Where the diagrams go beyond the ADR
 
 Three flows were added because ADR 001 describes them; remove them if you want a leaner diagram:
