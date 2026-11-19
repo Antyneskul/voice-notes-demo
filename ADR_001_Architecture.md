@@ -19,7 +19,7 @@ Assumed scenario. A field sales rep needs to capture a customer visit while offl
 
 ## Product data flow
 
-[![Proposed production architecture: component and data-flow diagram](docs/architecture-production.png)](docs/architecture-production.png)
+[![Proposed production architecture: component and data-flow diagram](docs/images/architecture-production.png)](docs/images/architecture-production.png)
 
 *Proposed production architecture (click for full size). Blue: capture and upload, steps 1 and 2. Green: process and review, step 3. Orange: approve and export, step 4. Gray: admin and support access, described under Production operations. The numbers on the arrows match the steps below. "1 txn" means one database transaction. The API's check of the uploaded S3 object in step 2 and the identity provider are not drawn.*
 

@@ -25,7 +25,7 @@ A field sales rep records a voice note after a customer visit. The app sends it 
 curl -i -F "audio=@samples/sample-note.wav" http://localhost:8080/notes
 ```
 
-`docs/notion-export-example.png` is the last-resort screenshot.
+`docs/images/notion-export-example.png` is the last-resort screenshot.
 
 ## 3. End-to-end flow
 
