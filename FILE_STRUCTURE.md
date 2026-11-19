@@ -23,7 +23,7 @@ It implements the **Demo** section of the ADR. It is deliberately synchronous, u
 | `backend/` | Go service (run this first) |
 | `mobile/` | Expo / React Native demo screen (optional, iOS only) |
 | `samples/` | `sample-note.wav` (18 s, synthetic macOS `say` voice) and `sample-note.txt` (its script) for the curl example |
-| `docs/` | `demo-flow.md` (helper doc for the demo: steps, flow, LLM step, caveats, future-steps questions), `architecture-production.svg` / `.png` (ADR diagram), `notion-export-example.png` (README screenshot) |
+| `docs/` | `demo-flow.md` (helper doc for the demo: steps, flow, LLM step, caveats, future-steps questions), `architecture-production.svg` / `.png` (ADR diagram), `c4-architecture.md` (two C4 diagrams, demo as built and proposed production, with their editable `c4-current-demo.drawio` and `c4-proposed-production.drawio` sources and `.svg` exports; context and containers only, no components), `notion-export-example.png` (README screenshot) |
 | `.gitignore` | Ignores `.env`, `node_modules`, `.expo`, Go build output, `.DS_Store` |
 
 ## Backend (`backend/`, Go 1.25+, package `main`)

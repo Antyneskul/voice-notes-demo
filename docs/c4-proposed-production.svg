@@ -1,0 +1,231 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1920" height="1080" viewBox="0 0 1920 1080" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif">
+<title>Proposed production architecture — ADR 001</title>
+<defs>
+<marker id="m-req" markerWidth="14" markerHeight="14" refX="12" refY="7" orient="auto-start-reverse" markerUnits="userSpaceOnUse"><path d="M1,1 L13,7 L1,13 z" fill="#333333"/></marker>
+<marker id="m-ret" markerWidth="14" markerHeight="14" refX="12" refY="7" orient="auto-start-reverse" markerUnits="userSpaceOnUse"><path d="M1,1 L13,7 L1,13 z" fill="#0F766E"/></marker>
+</defs>
+<rect width="1920" height="1080" fill="#ffffff"/>
+<text x="48" y="68" font-size="34" font-weight="700" fill="#111">Proposed production architecture — ADR 001</text>
+<text x="48" y="104" font-size="18" fill="#555555">C4 system context and container view · design proposal; none of these containers exist yet</text>
+<g id="badge"><rect x="1629.2" y="40" width="242.8" height="38" rx="19" fill="#B45309"/><text x="1750.6" y="65" text-anchor="middle" font-size="15" font-weight="700" fill="#fff" letter-spacing="0.5">PROPOSED · not implemented</text></g>
+<g id="zone-system"><rect x="235" y="285" width="1340" height="595" rx="10" fill="none" stroke="#333333" stroke-width="2.5" stroke-dasharray="10 6"/>
+<text x="1559" y="313" text-anchor="end" font-size="15.0" fill="#111111"><tspan font-weight="700">Voice Line production system</tspan> <tspan font-weight="400" fill="#666">[software system]</tspan></text></g>
+<g id="zone-device"><rect x="255" y="335" width="250" height="290" rx="10" fill="#F1F5F9" stroke="#64748B" stroke-width="2" stroke-dasharray="7 5"/>
+<text x="271" y="611" text-anchor="start" font-size="15.0" fill="#475569"><tspan font-weight="700">Rep's device</tspan></text></g>
+<g id="zone-aws"><rect x="600" y="335" width="950" height="527" rx="10" fill="#FFF6E5" stroke="#D97706" stroke-width="2" stroke-dasharray="7 5"/>
+<text x="616" y="848" text-anchor="start" font-size="15.0" fill="#92400E"><tspan font-weight="700">AWS — hosting and trust boundary</tspan></text></g>
+<g id="node-rep">
+<rect x="12" y="375" width="168" height="210" rx="8" fill="#08427B" stroke="#0E3A66" stroke-width="1.5"/>
+<text x="96.0" y="414.9" text-anchor="middle" font-size="13.5" font-style="italic" fill="#DCE9F7">[Person]</text>
+<text x="96.0" y="437.6" text-anchor="middle" font-size="18.0" font-weight="700" fill="#fff">Sales rep</text>
+<text x="96.0" y="458.0" text-anchor="middle" font-size="14.5" fill="#fff">Dictates a voice</text>
+<text x="96.0" y="477.1" text-anchor="middle" font-size="14.5" fill="#fff">note after a</text>
+<text x="96.0" y="496.3" text-anchor="middle" font-size="14.5" fill="#fff">customer visit,</text>
+<text x="96.0" y="515.4" text-anchor="middle" font-size="14.5" fill="#fff">including offline,</text>
+<text x="96.0" y="534.6" text-anchor="middle" font-size="14.5" fill="#fff">then reviews and</text>
+<text x="96.0" y="553.7" text-anchor="middle" font-size="14.5" fill="#fff">approves the draft</text>
+</g>
+<g id="node-admin">
+<rect x="820" y="125" width="250" height="135" rx="8" fill="#08427B" stroke="#0E3A66" stroke-width="1.5"/>
+<text x="945.0" y="143.9" text-anchor="middle" font-size="13.5" font-style="italic" fill="#DCE9F7">[Person]</text>
+<text x="945.0" y="166.6" text-anchor="middle" font-size="18.0" font-weight="700" fill="#fff">Tenant admin /</text>
+<text x="945.0" y="190.9" text-anchor="middle" font-size="18.0" font-weight="700" fill="#fff">support</text>
+<text x="945.0" y="211.4" text-anchor="middle" font-size="14.5" fill="#fff">Sets up tenant users and CRM</text>
+<text x="945.0" y="230.5" text-anchor="middle" font-size="14.5" fill="#fff">connections, helps recover</text>
+<text x="945.0" y="249.6" text-anchor="middle" font-size="14.5" fill="#fff">failed exports</text>
+</g>
+<g id="node-idp">
+<rect x="300" y="125" width="290" height="135" rx="8" fill="#6B6B6B" stroke="#0E3A66" stroke-width="1.5"/>
+<text x="445.0" y="165.7" text-anchor="middle" font-size="13.5" font-style="italic" fill="#DCE9F7">[External system]</text>
+<text x="445.0" y="188.3" text-anchor="middle" font-size="18.0" font-weight="700" fill="#fff">Identity provider</text>
+<text x="445.0" y="208.8" text-anchor="middle" font-size="14.5" fill="#fff">OIDC login, short-lived tokens and</text>
+<text x="445.0" y="227.9" text-anchor="middle" font-size="14.5" fill="#fff">JWKS public keys</text>
+</g>
+<g id="node-app">
+<rect x="280" y="385" width="200" height="190" rx="8" fill="#1A6FC4" stroke="#0E3A66" stroke-width="1.5"/>
+<text x="380.0" y="448.5" text-anchor="middle" font-size="18.0" font-weight="700" fill="#fff">Mobile app</text>
+<text x="380.0" y="467.9" text-anchor="middle" font-size="13.5" font-style="italic" fill="#DCE9F7">[React Native / Expo · SQLite]</text>
+<text x="380.0" y="486.7" text-anchor="middle" font-size="14.5" fill="#fff">Offline capture, upload</text>
+<text x="380.0" y="505.8" text-anchor="middle" font-size="14.5" fill="#fff">state, review and</text>
+<text x="380.0" y="525.0" text-anchor="middle" font-size="14.5" fill="#fff">approval</text>
+</g>
+<g id="node-api">
+<rect x="650" y="345" width="250" height="300" rx="8" fill="#1A6FC4" stroke="#0E3A66" stroke-width="1.5"/>
+<text x="775.0" y="434.7" text-anchor="middle" font-size="18.0" font-weight="700" fill="#fff">API</text>
+<text x="775.0" y="454.2" text-anchor="middle" font-size="13.5" font-style="italic" fill="#DCE9F7">[Go / Gin · AWS ECS Fargate]</text>
+<text x="775.0" y="473.0" text-anchor="middle" font-size="14.5" fill="#fff">• Notes and tenant-scoped</text>
+<text x="775.0" y="492.1" text-anchor="middle" font-size="14.5" fill="#fff">authorization</text>
+<text x="775.0" y="511.3" text-anchor="middle" font-size="14.5" fill="#fff">• Presigned uploads</text>
+<text x="775.0" y="530.4" text-anchor="middle" font-size="14.5" fill="#fff">• Review and approval</text>
+<text x="775.0" y="549.6" text-anchor="middle" font-size="14.5" fill="#fff">• Validates JWT using IdP</text>
+<text x="775.0" y="568.7" text-anchor="middle" font-size="14.5" fill="#fff">JWKS, locally</text>
+</g>
+<g id="node-db">
+<path d="M1037,359 a95.0,14 0 0 1 190,0 v122 a95.0,14 0 0 1 -190,0 z" fill="#1A6FC4" stroke="#0E4C8A" stroke-width="1.5"/>
+<path d="M1037,359 a95.0,14 0 0 0 190,0" fill="none" stroke="#0E4C8A" stroke-width="1.5"/>
+<text x="1132.0" y="385.9" text-anchor="middle" font-size="18.0" font-weight="700" fill="#fff">PostgreSQL</text>
+<text x="1132.0" y="405.3" text-anchor="middle" font-size="13.5" font-style="italic" fill="#DCE9F7">[AWS RDS]</text>
+<text x="1132.0" y="424.1" text-anchor="middle" font-size="14.5" fill="#fff">Note state,</text>
+<text x="1132.0" y="443.3" text-anchor="middle" font-size="14.5" fill="#fff">transcripts, drafts,</text>
+<text x="1132.0" y="462.4" text-anchor="middle" font-size="14.5" fill="#fff">extraction and export</text>
+<text x="1132.0" y="481.6" text-anchor="middle" font-size="14.5" fill="#fff">jobs</text>
+</g>
+<g id="node-secrets">
+<rect x="1037" y="545" width="190" height="140" rx="8" fill="#1A6FC4" stroke="#0E3A66" stroke-width="1.5"/>
+<text x="1132.0" y="580.2" text-anchor="middle" font-size="18.0" font-weight="700" fill="#fff">AWS Secrets</text>
+<text x="1132.0" y="604.5" text-anchor="middle" font-size="18.0" font-weight="700" fill="#fff">Manager</text>
+<text x="1132.0" y="624.9" text-anchor="middle" font-size="14.5" fill="#fff">Provider keys and</text>
+<text x="1132.0" y="644.1" text-anchor="middle" font-size="14.5" fill="#fff">tenant CRM</text>
+<text x="1132.0" y="663.2" text-anchor="middle" font-size="14.5" fill="#fff">credentials</text>
+</g>
+<g id="node-s3">
+<path d="M1037,739 a95.0,14 0 0 1 190,0 v92 a95.0,14 0 0 1 -190,0 z" fill="#1A6FC4" stroke="#0E4C8A" stroke-width="1.5"/>
+<path d="M1037,739 a95.0,14 0 0 0 190,0" fill="none" stroke="#0E4C8A" stroke-width="1.5"/>
+<text x="1132.0" y="779.6" text-anchor="middle" font-size="18.0" font-weight="700" fill="#fff">Audio store</text>
+<text x="1132.0" y="799.0" text-anchor="middle" font-size="13.5" font-style="italic" fill="#DCE9F7">[AWS S3]</text>
+<text x="1132.0" y="817.8" text-anchor="middle" font-size="14.5" fill="#fff">Uploaded audio</text>
+</g>
+<g id="node-worker">
+<rect x="1345" y="345" width="180" height="500" rx="8" fill="#1A6FC4" stroke="#0E3A66" stroke-width="1.5"/>
+<text x="1435.0" y="515.6" text-anchor="middle" font-size="18.0" font-weight="700" fill="#fff">Worker</text>
+<text x="1435.0" y="535.0" text-anchor="middle" font-size="13.5" font-style="italic" fill="#DCE9F7">[Go · AWS ECS Fargate]</text>
+<text x="1435.0" y="553.9" text-anchor="middle" font-size="14.5" fill="#fff">• Claims jobs with a</text>
+<text x="1435.0" y="573.0" text-anchor="middle" font-size="14.5" fill="#fff">lease</text>
+<text x="1435.0" y="592.1" text-anchor="middle" font-size="14.5" fill="#fff">• Runs AI</text>
+<text x="1435.0" y="611.3" text-anchor="middle" font-size="14.5" fill="#fff">processing: speech-</text>
+<text x="1435.0" y="630.4" text-anchor="middle" font-size="14.5" fill="#fff">to-text, then LLM</text>
+<text x="1435.0" y="649.6" text-anchor="middle" font-size="14.5" fill="#fff">• Exports approved</text>
+<text x="1435.0" y="668.7" text-anchor="middle" font-size="14.5" fill="#fff">notes to the CRM</text>
+<text x="1435.0" y="687.8" text-anchor="middle" font-size="14.5" fill="#fff">• Bounded retries</text>
+</g>
+<g id="node-stt">
+<rect x="1710" y="330" width="190" height="150" rx="8" fill="#6B6B6B" stroke="#0E3A66" stroke-width="1.5"/>
+<text x="1805.0" y="366.0" text-anchor="middle" font-size="13.5" font-style="italic" fill="#DCE9F7">[External system]</text>
+<text x="1805.0" y="388.7" text-anchor="middle" font-size="18.0" font-weight="700" fill="#fff">Speech-to-text</text>
+<text x="1805.0" y="413.0" text-anchor="middle" font-size="18.0" font-weight="700" fill="#fff">provider</text>
+<text x="1805.0" y="433.4" text-anchor="middle" font-size="14.5" fill="#fff">Receives audio,</text>
+<text x="1805.0" y="452.6" text-anchor="middle" font-size="14.5" fill="#fff">returns a transcript</text>
+</g>
+<g id="node-llm">
+<rect x="1710" y="515" width="190" height="150" rx="8" fill="#6B6B6B" stroke="#0E3A66" stroke-width="1.5"/>
+<text x="1805.0" y="553.6" text-anchor="middle" font-size="13.5" font-style="italic" fill="#DCE9F7">[External system]</text>
+<text x="1805.0" y="576.3" text-anchor="middle" font-size="18.0" font-weight="700" fill="#fff">LLM provider</text>
+<text x="1805.0" y="596.7" text-anchor="middle" font-size="14.5" fill="#fff">Receives the</text>
+<text x="1805.0" y="615.8" text-anchor="middle" font-size="14.5" fill="#fff">transcript, returns a</text>
+<text x="1805.0" y="635.0" text-anchor="middle" font-size="14.5" fill="#fff">structured draft</text>
+</g>
+<g id="node-crm">
+<rect x="1710" y="710" width="190" height="150" rx="8" fill="#6B6B6B" stroke="#0E3A66" stroke-width="1.5"/>
+<text x="1805.0" y="758.2" text-anchor="middle" font-size="13.5" font-style="italic" fill="#DCE9F7">[External system]</text>
+<text x="1805.0" y="780.8" text-anchor="middle" font-size="18.0" font-weight="700" fill="#fff">Tenant CRM</text>
+<text x="1805.0" y="801.3" text-anchor="middle" font-size="14.5" fill="#fff">Receives the rep-</text>
+<text x="1805.0" y="820.4" text-anchor="middle" font-size="14.5" fill="#fff">approved note</text>
+</g>
+<g id="arrow-rep-app"><polyline points="180.0,480.0 280.0,480.0" fill="none" stroke="#333333" stroke-width="2.4" stroke-linejoin="round" marker-end="url(#m-req)" marker-start="url(#m-req)"/>
+<text text-anchor="middle" font-size="14.5" font-weight="600" fill="#222222" paint-order="stroke" stroke="#ffffff" stroke-width="7" stroke-linejoin="round"><tspan x="230.0" y="404.4">Dictates,</tspan><tspan x="230.0" y="423.5">reviews,</tspan><tspan x="230.0" y="442.6">edits,</tspan><tspan x="230.0" y="461.8">approves</tspan></text>
+</g>
+<g id="arrow-app-idp"><polyline points="340.0,385.0 340.0,260.0" fill="none" stroke="#333333" stroke-width="2.4" stroke-linejoin="round" marker-end="url(#m-req)"/>
+<text text-anchor="end" font-size="14.5" font-weight="600" fill="#222222" paint-order="stroke" stroke="#ffffff" stroke-width="7" stroke-linejoin="round"><tspan x="326.0" y="317.5">OIDC</tspan><tspan x="326.0" y="336.6">sign-in</tspan></text>
+</g>
+<g id="arrow-idp-app"><polyline points="400.0,260.0 400.0,385.0" fill="none" stroke="#0F766E" stroke-width="2.4" stroke-linejoin="round" marker-end="url(#m-ret)"/>
+<text text-anchor="start" font-size="14.5" font-weight="600" fill="#0B5D56" paint-order="stroke" stroke="#ffffff" stroke-width="7" stroke-linejoin="round"><tspan x="414.0" y="317.5">Short-lived</tspan><tspan x="414.0" y="336.6">token (JWT)</tspan></text>
+</g>
+<g id="arrow-api-idp"><polyline points="760.0,345.0 760.0,175.0 590.0,175.0" fill="none" stroke="#333333" stroke-width="2.4" stroke-linejoin="round" marker-end="url(#m-req)"/>
+<text text-anchor="middle" font-size="14.5" font-weight="600" fill="#222222" paint-order="stroke" stroke="#ffffff" stroke-width="7" stroke-linejoin="round"><tspan x="675.0" y="142.4">Fetch JWKS</tspan><tspan x="675.0" y="161.5">public keys (cached)</tspan></text>
+</g>
+<g id="arrow-idp-api"><polyline points="590.0,225.0 710.0,225.0 710.0,345.0" fill="none" stroke="#0F766E" stroke-width="2.4" stroke-linejoin="round" marker-end="url(#m-ret)"/>
+<text text-anchor="middle" font-size="14.5" font-weight="600" fill="#0B5D56" paint-order="stroke" stroke="#ffffff" stroke-width="7" stroke-linejoin="round"><tspan x="650.0" y="248.6">Public keys</tspan><tspan x="650.0" y="267.8">(JWKS)</tspan></text>
+</g>
+<g id="arrow-admin-api"><polyline points="870.0,260.0 870.0,345.0" fill="none" stroke="#333333" stroke-width="2.4" stroke-linejoin="round" marker-end="url(#m-req)" marker-start="url(#m-req)"/>
+<text text-anchor="start" font-size="14.5" font-weight="600" fill="#222222" paint-order="stroke" stroke="#ffffff" stroke-width="7" stroke-linejoin="round"><tspan x="884.0" y="299.5">Tenant setup, CRM connection,</tspan><tspan x="884.0" y="318.6">export recovery and monitoring</tspan></text>
+</g>
+<g id="arrow-app-api"><polyline points="480.0,445.0 650.0,445.0" fill="none" stroke="#333333" stroke-width="2.4" stroke-linejoin="round" marker-end="url(#m-req)"/>
+<text text-anchor="middle" font-size="14.5" font-weight="600" fill="#222222" paint-order="stroke" stroke="#ffffff" stroke-width="7" stroke-linejoin="round"><tspan x="565.0" y="393.2">Create note, poll,</tspan><tspan x="565.0" y="412.4">review, approve</tspan><tspan x="565.0" y="431.5" font-style="italic" font-weight="400">[HTTPS / JSON]</tspan></text>
+</g>
+<g id="arrow-api-app"><polyline points="650.0,515.0 480.0,515.0" fill="none" stroke="#0F766E" stroke-width="2.4" stroke-linejoin="round" marker-end="url(#m-ret)"/>
+<text text-anchor="middle" font-size="14.5" font-weight="600" fill="#0B5D56" paint-order="stroke" stroke="#ffffff" stroke-width="7" stroke-linejoin="round"><tspan x="565.0" y="538.6">Status, draft,</tspan><tspan x="565.0" y="557.8">presigned URL</tspan></text>
+</g>
+<g id="arrow-app-s3"><polyline points="420.0,575.0 420.0,822.0 1037.0,822.0" fill="none" stroke="#333333" stroke-width="2.4" stroke-linejoin="round" marker-end="url(#m-req)"/>
+<text text-anchor="start" font-size="14.5" font-weight="600" fill="#222222" paint-order="stroke" stroke="#ffffff" stroke-width="7" stroke-linejoin="round"><tspan x="440.0" y="787.4">Upload audio via a short-lived,</tspan><tspan x="440.0" y="806.5">scoped presigned URL [HTTPS]</tspan></text>
+</g>
+<g id="arrow-api-s3"><polyline points="775.0,645.0 775.0,772.0 1037.0,772.0" fill="none" stroke="#333333" stroke-width="2.4" stroke-linejoin="round" marker-end="url(#m-req)"/>
+<text text-anchor="start" font-size="14.5" font-weight="600" fill="#222222" paint-order="stroke" stroke="#ffffff" stroke-width="7" stroke-linejoin="round"><tspan x="790.0" y="758.5">Verify uploaded object</tspan></text>
+</g>
+<g id="arrow-api-db"><polyline points="900.0,420.0 1037.0,420.0" fill="none" stroke="#333333" stroke-width="2.4" stroke-linejoin="round" marker-end="url(#m-req)"/>
+<text text-anchor="middle" font-size="14.5" font-weight="600" fill="#222222" paint-order="stroke" stroke="#ffffff" stroke-width="7" stroke-linejoin="round"><tspan x="968.0" y="368.2">Note state +</tspan><tspan x="968.0" y="387.4">job, one</tspan><tspan x="968.0" y="406.5">SQL txn</tspan></text>
+</g>
+<g id="arrow-worker-db"><polyline points="1345.0,420.0 1227.0,420.0" fill="none" stroke="#333333" stroke-width="2.4" stroke-linejoin="round" marker-end="url(#m-req)"/>
+<text text-anchor="middle" font-size="14.5" font-weight="600" fill="#222222" paint-order="stroke" stroke="#ffffff" stroke-width="7" stroke-linejoin="round"><tspan x="1286.0" y="368.2">Claim jobs</tspan><tspan x="1286.0" y="387.4">(lease), save</tspan><tspan x="1286.0" y="406.5">stage results</tspan></text>
+</g>
+<g id="arrow-worker-secrets"><polyline points="1345.0,615.0 1227.0,615.0" fill="none" stroke="#333333" stroke-width="2.4" stroke-linejoin="round" marker-end="url(#m-req)"/>
+<text text-anchor="middle" font-size="14.5" font-weight="600" fill="#222222" paint-order="stroke" stroke="#ffffff" stroke-width="7" stroke-linejoin="round"><tspan x="1286.0" y="563.2">Read provider</tspan><tspan x="1286.0" y="582.4">key or CRM</tspan><tspan x="1286.0" y="601.5">credential</tspan></text>
+</g>
+<g id="arrow-worker-s3"><polyline points="1345.0,790.0 1227.0,790.0" fill="none" stroke="#333333" stroke-width="2.4" stroke-linejoin="round" marker-end="url(#m-req)"/>
+<text text-anchor="middle" font-size="14.5" font-weight="600" fill="#222222" paint-order="stroke" stroke="#ffffff" stroke-width="7" stroke-linejoin="round"><tspan x="1286.0" y="757.4">Read authorized</tspan><tspan x="1286.0" y="776.5">audio object</tspan></text>
+</g>
+<g id="arrow-worker-stt"><polyline points="1525.0,380.0 1710.0,380.0" fill="none" stroke="#333333" stroke-width="2.4" stroke-linejoin="round" marker-end="url(#m-req)"/>
+<text text-anchor="middle" font-size="14.5" font-weight="600" fill="#222222" paint-order="stroke" stroke="#ffffff" stroke-width="7" stroke-linejoin="round"><tspan x="1617.0" y="347.4">Sends audio</tspan><tspan x="1617.0" y="366.5" font-style="italic" font-weight="400">[HTTPS]</tspan></text>
+</g>
+<g id="arrow-stt-worker"><polyline points="1710.0,430.0 1525.0,430.0" fill="none" stroke="#0F766E" stroke-width="2.4" stroke-linejoin="round" marker-end="url(#m-ret)"/>
+<text text-anchor="middle" font-size="14.5" font-weight="600" fill="#0B5D56" paint-order="stroke" stroke="#ffffff" stroke-width="7" stroke-linejoin="round"><tspan x="1617.0" y="453.6">Returns</tspan><tspan x="1617.0" y="472.8">transcript</tspan></text>
+</g>
+<g id="arrow-worker-llm"><polyline points="1525.0,565.0 1710.0,565.0" fill="none" stroke="#333333" stroke-width="2.4" stroke-linejoin="round" marker-end="url(#m-req)"/>
+<text text-anchor="middle" font-size="14.5" font-weight="600" fill="#222222" paint-order="stroke" stroke="#ffffff" stroke-width="7" stroke-linejoin="round"><tspan x="1617.0" y="532.4">Sends transcript</tspan><tspan x="1617.0" y="551.5" font-style="italic" font-weight="400">[HTTPS]</tspan></text>
+</g>
+<g id="arrow-llm-worker"><polyline points="1710.0,615.0 1525.0,615.0" fill="none" stroke="#0F766E" stroke-width="2.4" stroke-linejoin="round" marker-end="url(#m-ret)"/>
+<text text-anchor="middle" font-size="14.5" font-weight="600" fill="#0B5D56" paint-order="stroke" stroke="#ffffff" stroke-width="7" stroke-linejoin="round"><tspan x="1617.0" y="638.6">Returns structured</tspan><tspan x="1617.0" y="657.8">draft (JSON)</tspan></text>
+</g>
+<g id="arrow-worker-crm"><polyline points="1525.0,780.0 1710.0,780.0" fill="none" stroke="#333333" stroke-width="2.4" stroke-linejoin="round" marker-end="url(#m-req)"/>
+<text text-anchor="middle" font-size="14.5" font-weight="600" fill="#222222" paint-order="stroke" stroke="#ffffff" stroke-width="7" stroke-linejoin="round"><tspan x="1617.0" y="728.2">Sends approved version</tspan><tspan x="1617.0" y="747.4">+ idempotency key</tspan><tspan x="1617.0" y="766.5" font-style="italic" font-weight="400">[HTTPS]</tspan></text>
+</g>
+<g id="arrow-crm-worker"><polyline points="1710.0,830.0 1525.0,830.0" fill="none" stroke="#0F766E" stroke-width="2.4" stroke-linejoin="round" marker-end="url(#m-ret)"/>
+<text text-anchor="middle" font-size="14.5" font-weight="600" fill="#0B5D56" paint-order="stroke" stroke="#ffffff" stroke-width="7" stroke-linejoin="round"><tspan x="1617.0" y="853.6">Returns success</tspan><tspan x="1617.0" y="872.8">or error</tspan></text>
+</g>
+<g id="note-n1"><rect x="40" y="895" width="925" height="30" rx="6" fill="#FFF4CC" stroke="#C99A06" stroke-width="1.8"/>
+<text x="54" y="914.9" font-size="14.5" fill="#3B2F00">Database-backed job queue; no separate queue service is assumed in this proposal.</text>
+</g>
+<g id="note-n2"><rect x="40" y="929" width="925" height="30" rx="6" fill="#FFF4CC" stroke="#C99A06" stroke-width="1.8"/>
+<text x="54" y="948.9" font-size="14.5" fill="#3B2F00">Retries are bounded; failed jobs remain recoverable. CRM export is idempotent.</text>
+</g>
+<g id="note-n3"><rect x="40" y="963" width="925" height="30" rx="6" fill="#FFF4CC" stroke="#C99A06" stroke-width="1.8"/>
+<text x="54" y="982.9" font-size="14.5" fill="#3B2F00">Human review and approval happen before CRM export.</text>
+</g>
+<g id="note-n4"><rect x="40" y="997" width="925" height="30" rx="6" fill="#FFF4CC" stroke="#C99A06" stroke-width="1.8"/>
+<text x="54" y="1016.9" font-size="14.5" fill="#3B2F00">Retention and deletion policy covers audio, transcripts, drafts, logs where applicable, and backups.</text>
+</g>
+<g id="note-n5"><rect x="40" y="1031" width="925" height="30" rx="6" fill="#FFF4CC" stroke="#C99A06" stroke-width="1.8"/>
+<text x="54" y="1050.9" font-size="14.5" fill="#3B2F00">Offline audio is stored on the device until upload succeeds, then deleted in line with the retention policy.</text>
+</g>
+<g id="note-n6"><rect x="985" y="895" width="895" height="76" rx="6" fill="#FFF4CC" stroke="#C99A06" stroke-width="1.8"/>
+<text x="999" y="918.8" font-size="14.5" fill="#3B2F00"><tspan font-weight="700">Design change:</tspan> The production proposal uses separate transcription and extraction stages. The demo uses one</text>
+<text x="999" y="937.9" font-size="14.5" fill="#3B2F00">multimodal audio call. This is an intentional design change whose latency, cost, and quality trade-offs should be</text>
+<text x="999" y="957.1" font-size="14.5" fill="#3B2F00">evaluated.</text>
+</g>
+<g id="note-oq"><rect x="985" y="975" width="895" height="86" rx="6" fill="#F3E8FF" stroke="#7C3AED" stroke-width="1.8"/>
+<text x="999" y="1003.8" font-size="14.5" fill="#2E1065"><tspan font-weight="700">Open question:</tspan> These diagrams assume the rep dictates their own voice note after the visit, as the demo does.</text>
+<text x="999" y="1022.9" font-size="14.5" fill="#2E1065">Confirm with product: if the rep instead records the customer conversation, add the customer as a participant and</text>
+<text x="999" y="1042.1" font-size="14.5" fill="#2E1065">a recording notice and consent step.</text>
+</g>
+<g id="legend"><text x="1240" y="112" font-size="16" font-weight="700" fill="#111">Legend</text>
+<rect x="1240" y="134" width="34" height="18" rx="4" fill="#08427B"/>
+<text x="1284" y="147" font-size="14.5" fill="#222">Person</text>
+<rect x="1240" y="164" width="34" height="18" rx="4" fill="#1A6FC4"/>
+<text x="1284" y="177" font-size="14.5" fill="#222">Voice Line container</text>
+<rect x="1240" y="194" width="34" height="18" rx="4" fill="#6B6B6B"/>
+<text x="1284" y="207" font-size="14.5" fill="#222">External system</text>
+<rect x="1240" y="224" width="34" height="18" rx="4" fill="none" stroke="#333" stroke-width="2.5" stroke-dasharray="6 4"/>
+<text x="1284" y="237" font-size="14.5" fill="#222">System boundary</text>
+<rect x="1240" y="254" width="34" height="18" rx="4" fill="#FFF6E5" stroke="#D97706" stroke-width="2" stroke-dasharray="5 4"/>
+<text x="1284" y="267" font-size="14.5" fill="#222">AWS trust boundary</text>
+<rect x="1570" y="134" width="34" height="18" rx="4" fill="#F1F5F9" stroke="#64748B" stroke-width="2" stroke-dasharray="5 4"/>
+<text x="1614" y="147" font-size="14.5" fill="#222">Device trust zone</text>
+<g><line x1="1570" y1="173" x2="1600" y2="173" stroke="#333333" stroke-width="2.4" marker-end="url(#m-req)"/></g>
+<text x="1614" y="177" font-size="14.5" fill="#222">Request or call</text>
+<g><line x1="1570" y1="203" x2="1600" y2="203" stroke="#0F766E" stroke-width="2.4" marker-end="url(#m-ret)"/></g>
+<text x="1614" y="207" font-size="14.5" fill="#222">Return flow</text>
+<rect x="1570" y="224" width="34" height="18" rx="3" fill="#FFF4CC" stroke="#C99A06" stroke-width="1.8"/>
+<text x="1614" y="237" font-size="14.5" fill="#222">Design note</text>
+<rect x="1570" y="254" width="34" height="18" rx="3" fill="#F3E8FF" stroke="#7C3AED" stroke-width="1.8"/>
+<text x="1614" y="267" font-size="14.5" fill="#222">Open question</text>
+</g>
+</svg>
