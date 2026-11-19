@@ -4,18 +4,18 @@ Two separate C4-style diagrams (system context and container level, no component
 
 | Diagram | Status | Editable source | Image |
 | --- | --- | --- | --- |
-| Current implementation: demo as built | Implemented, runs today | [c4-current-demo.drawio](c4-current-demo.drawio) | [c4-current-demo.svg](c4-current-demo.svg) |
-| Proposed production architecture: ADR 001 | Proposed, none of it is built | [c4-proposed-production.drawio](c4-proposed-production.drawio) | [c4-proposed-production.svg](c4-proposed-production.svg) |
+| Current implementation: demo as built | Implemented, runs today | [c4-current-demo.drawio](images/c4-current-demo.drawio) | [c4-current-demo.svg](images/c4-current-demo.svg) |
+| Proposed production architecture: ADR 001 | Proposed, none of it is built | [c4-proposed-production.drawio](images/c4-proposed-production.drawio) | [c4-proposed-production.svg](images/c4-proposed-production.svg) |
 
 To change a diagram, open the `.drawio` file in [diagrams.net](https://app.diagrams.net) (or the desktop app). Connectors are attached to the boxes, so they follow when you move one. Then use File, Export as, SVG to refresh the `.svg` that this page and other docs show.
 
 ## Current implementation: demo as built
 
-![Current implementation: a sales rep uses the Expo iOS app, which calls one Go service, which calls OpenAI and Notion](c4-current-demo.svg)
+![Current implementation: a sales rep uses the Expo iOS app, which calls one Go service, which calls OpenAI and Notion](images/c4-current-demo.svg)
 
 ## Proposed production architecture: ADR 001
 
-![Proposed production architecture: mobile app, API, worker, PostgreSQL, S3 and Secrets Manager, with an identity provider, speech-to-text, an LLM and a tenant CRM outside](c4-proposed-production.svg)
+![Proposed production architecture: mobile app, API, worker, PostgreSQL, S3 and Secrets Manager, with an identity provider, speech-to-text, an LLM and a tenant CRM outside](images/c4-proposed-production.svg)
 
 ## How to read them
 

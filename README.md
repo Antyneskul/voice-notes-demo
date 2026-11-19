@@ -12,7 +12,7 @@ Architecture and the production design, with a diagram: [ADR_001_Architecture.md
 backend/                  Go + Gin service: POST /notes        (the part to run first)
 mobile/                   Expo screen: Record, Stop, Upload    (optional demo on top)
 samples/                  sample-note.wav (18 s) and its script (for the curl example)
-docs/                     architecture diagram, Notion export screenshot
+docs/                     demo notes and C4 diagrams; images/ holds the diagram files and screenshot
 ADR_001_Architecture.md   architecture decision record
 NEXT_STEPS.md             roadmap and further plans
 ```
@@ -70,7 +70,7 @@ Content-Length: …
 
 Open `notion_page_url` in a browser (signed in to Notion): a page titled `Voice note <UTC timestamp>` with Summary, Action items (unchecked checkboxes) and Tags, as in the screenshot below.
 
-![Notion export from the sample recording, showing the summary, action items, and tags](docs/notion-export-example.png)
+![Notion export from the sample recording, showing the summary, action items, and tags](docs/images/notion-export-example.png)
 
 ### What it accepts and how it fails
 
