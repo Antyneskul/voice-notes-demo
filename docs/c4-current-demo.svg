@@ -1,0 +1,114 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1920" height="1080" viewBox="0 0 1920 1080" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif">
+<title>Current implementation — demo as built</title>
+<defs>
+<marker id="m-req" markerWidth="14" markerHeight="14" refX="12" refY="7" orient="auto-start-reverse" markerUnits="userSpaceOnUse"><path d="M1,1 L13,7 L1,13 z" fill="#333333"/></marker>
+<marker id="m-ret" markerWidth="14" markerHeight="14" refX="12" refY="7" orient="auto-start-reverse" markerUnits="userSpaceOnUse"><path d="M1,1 L13,7 L1,13 z" fill="#0F766E"/></marker>
+</defs>
+<rect width="1920" height="1080" fill="#ffffff"/>
+<text x="48" y="68" font-size="34" font-weight="700" fill="#111">Current implementation — demo as built</text>
+<text x="48" y="104" font-size="18" fill="#555555">C4 system context and container view · what this repository implements and runs today</text>
+<g id="badge"><rect x="1644.8" y="40" width="227.20000000000002" height="38" rx="19" fill="#166534"/><text x="1758.4" y="65" text-anchor="middle" font-size="15" font-weight="700" fill="#fff" letter-spacing="0.5">IMPLEMENTED · runs today</text></g>
+<g id="zone-system"><rect x="355" y="165" width="1060" height="625" rx="10" fill="none" stroke="#333333" stroke-width="2.5" stroke-dasharray="10 6"/>
+<text x="371" y="193" text-anchor="start" font-size="16.8" fill="#111111"><tspan font-weight="700">Voice Line demo</tspan> <tspan font-weight="400" fill="#666">[software system]</tspan></text></g>
+<g id="zone-iphone"><rect x="385" y="225" width="300" height="535" rx="10" fill="#F1F5F9" stroke="#64748B" stroke-width="2" stroke-dasharray="7 5"/>
+<text x="401" y="253" text-anchor="start" font-size="16.8" fill="#475569"><tspan font-weight="700">iPhone</tspan></text></g>
+<g id="zone-laptop"><rect x="925" y="225" width="455" height="535" rx="10" fill="#F1F5F9" stroke="#64748B" stroke-width="2" stroke-dasharray="7 5"/>
+<text x="941" y="253" text-anchor="start" font-size="16.8" fill="#475569"><tspan font-weight="700">Developer laptop</tspan> <tspan font-weight="400" fill="#666">(same Wi-Fi network)</tspan></text></g>
+<g id="node-rep">
+<rect x="40" y="455" width="230" height="150" rx="8" fill="#08427B" stroke="#0E3A66" stroke-width="1.5"/>
+<text x="155.0" y="500.0" text-anchor="middle" font-size="15.1" font-style="italic" fill="#DCE9F7">[Person]</text>
+<text x="155.0" y="525.4" text-anchor="middle" font-size="20.2" font-weight="700" fill="#fff">Sales rep</text>
+<text x="155.0" y="548.3" text-anchor="middle" font-size="16.2" fill="#fff">Dictates a post-visit</text>
+<text x="155.0" y="569.6" text-anchor="middle" font-size="16.2" fill="#fff">voice note on an iPhone</text>
+</g>
+<g id="node-app">
+<rect x="415" y="415" width="240" height="230" rx="8" fill="#1A6FC4" stroke="#0E3A66" stroke-width="1.5"/>
+<text x="535.0" y="494.8" text-anchor="middle" font-size="20.2" font-weight="700" fill="#fff">Mobile app</text>
+<text x="535.0" y="516.5" text-anchor="middle" font-size="15.1" font-style="italic" fill="#DCE9F7">[React Native / Expo · iOS only]</text>
+<text x="535.0" y="537.6" text-anchor="middle" font-size="16.2" fill="#fff">Records a WAV file,</text>
+<text x="535.0" y="558.9" text-anchor="middle" font-size="16.2" fill="#fff">uploads it and displays</text>
+<text x="535.0" y="580.3" text-anchor="middle" font-size="16.2" fill="#fff">the result</text>
+</g>
+<g id="node-svc">
+<rect x="955" y="305" width="395" height="390" rx="8" fill="#1A6FC4" stroke="#0E3A66" stroke-width="1.5"/>
+<text x="1152.5" y="443.4" text-anchor="middle" font-size="20.2" font-weight="700" fill="#fff">Go service</text>
+<text x="1152.5" y="465.2" text-anchor="middle" font-size="15.1" font-style="italic" fill="#DCE9F7">[Go / Gin · one process]</text>
+<text x="1152.5" y="486.2" text-anchor="middle" font-size="16.2" fill="#fff">• Receives the upload</text>
+<text x="1152.5" y="507.6" text-anchor="middle" font-size="16.2" fill="#fff">• Validates the audio and the model output</text>
+<text x="1152.5" y="528.9" text-anchor="middle" font-size="16.2" fill="#fff">• Writes the result to Notion</text>
+<text x="1152.5" y="550.3" text-anchor="middle" font-size="16.2" fill="#fff">• Synchronous processing</text>
+<text x="1152.5" y="571.7" text-anchor="middle" font-size="16.2" fill="#fff">• No authentication</text>
+</g>
+<g id="node-openai">
+<rect x="1610" y="285" width="280" height="220" rx="8" fill="#6B6B6B" stroke="#0E3A66" stroke-width="1.5"/>
+<text x="1750.0" y="354.3" text-anchor="middle" font-size="15.1" font-style="italic" fill="#DCE9F7">[External system]</text>
+<text x="1750.0" y="379.7" text-anchor="middle" font-size="20.2" font-weight="700" fill="#fff">OpenAI</text>
+<text x="1750.0" y="402.6" text-anchor="middle" font-size="16.2" fill="#fff">gpt-audio-1.5 receives the</text>
+<text x="1750.0" y="423.9" text-anchor="middle" font-size="16.2" fill="#fff">audio and prompt in one API</text>
+<text x="1750.0" y="445.3" text-anchor="middle" font-size="16.2" fill="#fff">call and returns JSON</text>
+</g>
+<g id="node-notion">
+<rect x="1610" y="535" width="280" height="220" rx="8" fill="#6B6B6B" stroke="#0E3A66" stroke-width="1.5"/>
+<text x="1750.0" y="615.0" text-anchor="middle" font-size="15.1" font-style="italic" fill="#DCE9F7">[External system]</text>
+<text x="1750.0" y="640.4" text-anchor="middle" font-size="20.2" font-weight="700" fill="#fff">Notion</text>
+<text x="1750.0" y="663.3" text-anchor="middle" font-size="16.2" fill="#fff">Receives a child page under a</text>
+<text x="1750.0" y="684.6" text-anchor="middle" font-size="16.2" fill="#fff">private demo page</text>
+</g>
+<g id="arrow-rep-app"><polyline points="270.0,500.0 415.0,500.0" fill="none" stroke="#333333" stroke-width="2.4" stroke-linejoin="round" marker-end="url(#m-req)"/>
+<text text-anchor="middle" font-size="16.2" font-weight="600" fill="#222222" paint-order="stroke" stroke="#ffffff" stroke-width="7" stroke-linejoin="round"><tspan x="342.0" y="464.6">Dictates a note,</tspan><tspan x="342.0" y="486.0">uploads audio</tspan></text>
+</g>
+<g id="arrow-app-rep"><polyline points="415.0,565.0 270.0,565.0" fill="none" stroke="#0F766E" stroke-width="2.4" stroke-linejoin="round" marker-end="url(#m-ret)"/>
+<text text-anchor="middle" font-size="16.2" font-weight="600" fill="#0B5D56" paint-order="stroke" stroke="#ffffff" stroke-width="7" stroke-linejoin="round"><tspan x="342.0" y="590.4">Shows the</tspan><tspan x="342.0" y="611.7">result card</tspan></text>
+</g>
+<g id="arrow-app-svc"><polyline points="655.0,500.0 955.0,500.0" fill="none" stroke="#333333" stroke-width="2.4" stroke-linejoin="round" marker-end="url(#m-req)"/>
+<text text-anchor="middle" font-size="16.2" font-weight="600" fill="#222222" paint-order="stroke" stroke="#ffffff" stroke-width="7" stroke-linejoin="round"><tspan x="805.0" y="464.6">POST /notes (multipart audio)</tspan><tspan x="805.0" y="486.0" font-style="italic" font-weight="400">[HTTP · 90 s timeout]</tspan></text>
+</g>
+<g id="arrow-svc-app"><polyline points="955.0,565.0 655.0,565.0" fill="none" stroke="#0F766E" stroke-width="2.4" stroke-linejoin="round" marker-end="url(#m-ret)"/>
+<text text-anchor="middle" font-size="16.2" font-weight="600" fill="#0B5D56" paint-order="stroke" stroke="#ffffff" stroke-width="7" stroke-linejoin="round"><tspan x="805.0" y="590.4">201 + JSON result:</tspan><tspan x="805.0" y="611.7">summary, action items,</tspan><tspan x="805.0" y="633.1">tags, Notion page URL</tspan></text>
+</g>
+<g id="arrow-svc-openai"><polyline points="1350.0,365.0 1610.0,365.0" fill="none" stroke="#333333" stroke-width="2.4" stroke-linejoin="round" marker-end="url(#m-req)"/>
+<text text-anchor="middle" font-size="16.2" font-weight="600" fill="#222222" paint-order="stroke" stroke="#ffffff" stroke-width="7" stroke-linejoin="round"><tspan x="1512.0" y="308.2">Audio + prompt</tspan><tspan x="1512.0" y="329.6">one synchronous call</tspan><tspan x="1512.0" y="351.0" font-style="italic" font-weight="400">[HTTPS · 60 s timeout]</tspan></text>
+</g>
+<g id="arrow-openai-svc"><polyline points="1610.0,430.0 1350.0,430.0" fill="none" stroke="#0F766E" stroke-width="2.4" stroke-linejoin="round" marker-end="url(#m-ret)"/>
+<text text-anchor="middle" font-size="16.2" font-weight="600" fill="#0B5D56" paint-order="stroke" stroke="#ffffff" stroke-width="7" stroke-linejoin="round"><tspan x="1512.0" y="455.4">JSON result</tspan><tspan x="1512.0" y="476.7">returned as text</tspan></text>
+</g>
+<g id="arrow-svc-notion"><polyline points="1350.0,615.0 1610.0,615.0" fill="none" stroke="#333333" stroke-width="2.4" stroke-linejoin="round" marker-end="url(#m-req)"/>
+<text text-anchor="middle" font-size="16.2" font-weight="600" fill="#222222" paint-order="stroke" stroke="#ffffff" stroke-width="7" stroke-linejoin="round"><tspan x="1512.0" y="579.6">Create child page</tspan><tspan x="1512.0" y="601.0" font-style="italic" font-weight="400">[HTTPS · 15 s timeout]</tspan></text>
+</g>
+<g id="arrow-notion-svc"><polyline points="1610.0,680.0 1350.0,680.0" fill="none" stroke="#0F766E" stroke-width="2.4" stroke-linejoin="round" marker-end="url(#m-ret)"/>
+<text text-anchor="middle" font-size="16.2" font-weight="600" fill="#0B5D56" paint-order="stroke" stroke="#ffffff" stroke-width="7" stroke-linejoin="round"><tspan x="1512.0" y="705.4">Success or</tspan><tspan x="1512.0" y="726.7">error response</tspan></text>
+</g>
+<g id="note-scope"><rect x="355" y="830" width="1060" height="105" rx="6" fill="#FFE9A8" stroke="#B07F00" stroke-width="1.8"/>
+<text x="369" y="877.1" font-size="17" fill="#3B2F00"><tspan font-weight="700">Demo scope:</tspan> no authentication, no database, no durable job queue, no asynchronous processing, and no CRM</text>
+<text x="369" y="899.5" font-size="17" fill="#3B2F00">integration. Notion is the demo export target.</text>
+</g>
+<g id="note-oq"><rect x="1440" y="790" width="440" height="185" rx="6" fill="#F3E8FF" stroke="#7C3AED" stroke-width="1.8"/>
+<text x="1454" y="834.5" font-size="16.2" fill="#2E1065"><tspan font-weight="700">Open question:</tspan> The demo shows a rep dictating</text>
+<text x="1454" y="855.9" font-size="16.2" fill="#2E1065">their own note after the visit, not recording</text>
+<text x="1454" y="877.3" font-size="16.2" fill="#2E1065">the customer conversation. Confirm the</text>
+<text x="1454" y="898.7" font-size="16.2" fill="#2E1065">production workflow: if the rep records the</text>
+<text x="1454" y="920.1" font-size="16.2" fill="#2E1065">conversation, add the customer as a participant</text>
+<text x="1454" y="941.5" font-size="16.2" fill="#2E1065">and a recording notice and consent step.</text>
+</g>
+<g id="note-src"><rect x="40" y="960" width="300" height="70" rx="6" fill="#FFF4CC" stroke="#C99A06" stroke-width="1.8"/>
+<text x="54" y="979.1" font-size="16.2" fill="#3B2F00"><tspan font-weight="700">Source:</tspan> backend/, mobile/ and</text>
+<text x="54" y="1000.5" font-size="16.2" fill="#3B2F00">docs/demo-flow.md; timeouts as</text>
+<text x="54" y="1021.9" font-size="16.2" fill="#3B2F00">coded.</text>
+</g>
+<g id="legend"><text x="40" y="700" font-size="16" font-weight="700" fill="#111">Legend</text>
+<rect x="40" y="722" width="34" height="18" rx="4" fill="#08427B"/>
+<text x="84" y="735" font-size="16.2" fill="#222">Person</text>
+<rect x="40" y="752" width="34" height="18" rx="4" fill="#1A6FC4"/>
+<text x="84" y="765" font-size="16.2" fill="#222">Voice Line container</text>
+<rect x="40" y="782" width="34" height="18" rx="4" fill="#6B6B6B"/>
+<text x="84" y="795" font-size="16.2" fill="#222">External system</text>
+<rect x="40" y="812" width="34" height="18" rx="4" fill="none" stroke="#333" stroke-width="2.5" stroke-dasharray="6 4"/>
+<text x="84" y="825" font-size="16.2" fill="#222">System boundary</text>
+<rect x="40" y="842" width="34" height="18" rx="4" fill="#F1F5F9" stroke="#64748B" stroke-width="2" stroke-dasharray="5 4"/>
+<text x="84" y="855" font-size="16.2" fill="#222">Trust zone (where it runs)</text>
+<g><line x1="40" y1="881" x2="70" y2="881" stroke="#333333" stroke-width="2.4" marker-end="url(#m-req)"/></g>
+<text x="84" y="885" font-size="16.2" fill="#222">Request or call</text>
+<g><line x1="40" y1="911" x2="70" y2="911" stroke="#0F766E" stroke-width="2.4" marker-end="url(#m-ret)"/></g>
+<text x="84" y="915" font-size="16.2" fill="#222">Return flow</text>
+</g>
+</svg>
