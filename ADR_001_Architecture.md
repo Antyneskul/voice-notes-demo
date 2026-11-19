@@ -50,6 +50,15 @@ Use a stable CRM idempotency key or external-ID upsert where supported. After a 
 
 Scope notes and CRM credentials by tenant, and keep provider keys and CRM credentials in a secrets manager. Apply audio retention and deletion policies and exclude note content from logs. Customer audio and transcripts go to third-party AI providers, so settle their retention and data-processing terms before using real customer data. Trace the upload, AI and export stages, and measure stage latency and failure rates before setting service targets.
 
+## Prompt injection through voice notes
+
+Spoken content is untrusted input in both designs: a rep, a customer or a bystander can say something that reads as an instruction to the model.
+
+- **Demo (checked in the code).** One model call receives the audio together with the extraction prompt (`backend/openai.go`). The prompt says the recording is data, not instructions, and to list only commitments the speaker states. That prompt is the only defence against spoken instructions, and no test has tried one yet.
+- **Production (proposed).** Transcription and extraction are separate calls, so the transcript is also untrusted input to the extractor. Splitting the stages does not remove the risk.
+- **Failure mode.** The model can return JSON that passes validation but contains an action item the conversation does not support. `ParseNote` (`backend/note.go`) checks structure only: exact keys, counts and lengths. It cannot check what was agreed. `createNote` (`backend/server.go`) passes the validated note straight to the Notion exporter in the same request, so the item becomes an unchecked to-do before anyone has read it.
+- **What limits the damage today (checked in the code).** The app sends only the audio file. The Notion parent page and token come from the server's environment, and the exporter writes only the three validated fields as text. A manipulated note can put wrong content on one page under the fixed parent. It cannot change where or as whom the service writes. Production should keep this property: the API and worker choose the CRM and its credentials from tenant configuration, never from audio, transcript or model output.
+
 ## Production operations
 
 Start with basic tools for tenant admins and support staff. Build a dedicated back-office app when the volume of onboarding and support work warrants it.
@@ -89,5 +98,11 @@ The [roadmap](NEXT_STEPS.md) has the detail and the order. In short:
 2. **Trace and observe.** Add Langfuse tracing if it meets data-handling requirements, with raw audio, transcripts and note content excluded by default, plus stage latency, failure rates and cost per note.
 3. **Harden the demo path.** Retry once on a 429 or 5xx and on invalid model output, add an idempotency key so a retried upload cannot create a second Notion page, add request IDs and an upload concurrency limit, and require authentication.
 4. **Build the production flow in order.** Resumable upload and durable processing, then rep review and approval, then the first CRM adapter.
+
+**Confirm before export.** The demo extracts and exports in one request, so no one sees the draft before it reaches Notion. Proposed, to limit the impact of an unsupported or injected action item:
+
+- **Demo: preview, then edit or confirm, then export.** `POST /notes` returns the validated draft and a draft ID without calling Notion, and a second call exports. The Go backend, not the app, enforces confirmation of the specific draft: it exports only a draft it issued and the rep confirmed (re-validating any edits with the same limits), and rejects an unknown, expired or already-exported ID. The backend keeps choosing the Notion destination and credentials.
+- **Production.** `POST /notes/{id}/approve` is the only path that can create an export job, and the worker exports only the version that job references. Show the relevant transcript excerpt next to each key field, and return an empty action list (or `null`, if the schema gains a single next-action field) when no action was agreed. Evidence excerpts are review aids, not proof: the model can quote wrongly or be steered, so check in Go that each excerpt appears in the stored transcript, and let the rep's decision gate the export.
+- **Acceptance criterion.** An unconfirmed draft must never call the Notion exporter. A test with a fake `Exporter` asserts zero `CreatePage` calls after a preview, and after a confirm with an unknown, expired or already-used draft ID.
 
 Open question: how the rep learns that a draft is ready after leaving the app. A push notification is the likely answer; polling covers the open app.
